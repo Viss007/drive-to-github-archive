@@ -30,9 +30,42 @@ Pirmiausia nieko neperrašinėk.
 1. Apžiūrėk repo struktūrą.
 2. Nustatyk, kuris esamas projektas geriausiai tinka pirmajam saugiam eksperimentui.
 3. Nustatyk dabartinį runtime / package manager / start commands.
-4. Patikrink, kokios agento galimybės jau egzistuoja: terminalas, browser, local server, process management, remote access.
-5. Patikrink, ar projekte jau yra health-check, demo, testavimo ar preview mechanizmai.
-6. Patikrink, ar yra jautrių credentials / secrets ir kaip juos izoliuoti.
+4. Inventorizuok, kokios agento galimybės jau egzistuoja: terminalas, browser, local server, process management, remote access.
+5. Patikrink, ar naudojamas IDE jau turi Codex arba kitą tinkamą coding-agent integraciją / extension.
+6. Patikrink, ar tokia integracija gali suteikti reikalingą workflow: agento paleidimą, terminalo darbą, projekto failų keitimą, testavimą, browser verification ir nuotolinį operatoriaus valdymą.
+7. Patikrink, ar projekte jau yra health-check, demo, testavimo ar preview mechanizmai.
+8. Patikrink, ar yra jautrių credentials / secrets ir kaip juos izoliuoti.
+
+## Installation principle: existing integration first
+
+**Neskubėk diegti atskiros Codex aplikacijos.**
+
+Pirmiausia nustatyk, ar dabartinis IDE jau turi oficialią arba tinkamą Codex integraciją / extension, kuri patenkina mūsų poreikius.
+
+Prioritetas:
+
+1. **Esamas IDE + Codex integracija** — pirmas pasirinkimas, jei funkcionalumas pakankamas.
+2. **Esamas IDE + kita tinkama agento integracija** — tik jei ji geriau atitinka workflow.
+3. **Atskira Codex aplikacija** — tik jeigu IDE integracija negali suteikti reikalingo remote/operator workflow.
+4. **Remote desktop (RustDesk / AnyDesk)** — tik kaip fallback, o ne pagrindinė architektūra.
+
+Nediek kelių agento klientų vienu metu vien tam, kad „gal prireiks“. Pirmiausia audituok, kas jau įdiegta ir ką realiai gali atlikti.
+
+### Ką agentas turi patikrinti
+
+- IDE pavadinimą ir versiją;
+- įdiegtas AI / coding-agent extensions;
+- ar Codex integracija jau prieinama;
+- ar integracija leidžia dirbti su lokaliu projektu;
+- ar galima paleisti terminalo komandas;
+- ar galima paleisti dev serverį ir testus;
+- ar galima atlikti browser/UI verification;
+- ar yra patogus statuso / approval workflow;
+- ar yra remote access / remote session galimybė;
+- kokie papildomi komponentai būtų būtini;
+- kokie komponentai būtų nereikalingi.
+
+Jeigu dokumentacija ar konkreti funkcija nėra aiški, **neapsimesk, kad ji egzistuoja**. Pažymėk kaip `UNKNOWN` ir nurodyk, ką reikia praktiškai patikrinti.
 
 ## Required architecture
 
@@ -46,7 +79,7 @@ Prioritetinė architektūra:
 → concise status report
 → operator decides next task
 
-Nenaudok remote desktop kaip pagrindinės architektūros, jei konkreti agento aplinka leidžia patogiai vykdyti projektą nuotoliniu būdu.
+Nenaudok remote desktop kaip pagrindinės architektūros, jei konkreti agento / IDE aplinka leidžia patogiai vykdyti projektą nuotoliniu būdu.
 
 Remote desktop (RustDesk / AnyDesk ar panašus) laikomas tik fallback'u.
 
@@ -56,6 +89,7 @@ Remote desktop (RustDesk / AnyDesk ar panašus) laikomas tik fallback'u.
 - Vietoj to naudoti manual checkpoint / backup / changed-file audit / manual revert.
 - Nekeisti esamos projekto architektūros be priežasties.
 - Neįdiegti nereikalingų SaaS servisų vien dėl demonstracijos.
+- Neįdiegti atskiro Codex app, jeigu esama IDE integracija jau patenkina poreikius.
 - Neįtraukti produkcinių API raktų ar privačių credentials į video workflow.
 - Nerodyti secrets terminalo, browser ar ekrano capture'uose.
 - Agentas turi turėti aiškias ribas, kokiame kataloge gali dirbti.
@@ -157,7 +191,8 @@ Nedaryk:
 - naujos SaaS infrastruktūros;
 - sudėtingo remote-control produkto;
 - nereikalingo auth sluoksnio;
-- production deployment vien dėl pirmo video.
+- production deployment vien dėl pirmo video;
+- atskiros Codex aplikacijos, kol nepatikrinta esama IDE integracija.
 
 Pirmas tikslas yra **patikimas demonstracinis remote coding loop**.
 
@@ -167,6 +202,10 @@ Prieš laikant setup'ą paruoštu:
 
 - [ ] Repo / projektas identifikuotas.
 - [ ] Working directory aiški.
+- [ ] Naudojamas IDE identifikuotas.
+- [ ] Esamos Codex / coding-agent integracijos identifikuotos.
+- [ ] Patikrinta, ar IDE integracija patenkina remote workflow poreikius.
+- [ ] Tik jeigu reikia, pasirinkta atskira Codex aplikacija.
 - [ ] Start command veikia.
 - [ ] Health check veikia.
 - [ ] Agentas gali atlikti mažą pakeitimą.
@@ -185,6 +224,10 @@ Baigęs auditą, pirmiausia pateik:
 ### Current state
 - repo / projektas:
 - runtime:
+- IDE + versija:
+- įdiegtos AI / coding-agent integracijos:
+- Codex integracijos statusas:
+- ar reikia atskiros Codex aplikacijos: YES / NO / UNKNOWN
 - start command:
 - health check:
 - existing agent capabilities:
@@ -193,10 +236,18 @@ Baigęs auditą, pirmiausia pateik:
 ### Recommended setup
 - pasirinkta architektūra:
 - kodėl:
+- existing IDE integration pakanka: YES / NO / UNKNOWN
+- jei nepakanka, ko konkrečiai trūksta:
 - reikalingi pakeitimai:
 
 ### Files to change
 - `path` — reason
+
+### Installation decision
+- naudoti esamą IDE integraciją: YES / NO
+- diegti atskirą Codex app: YES / NO
+- naudoti remote desktop fallback: YES / NO
+- reason:
 
 ### Safety / recovery
 - checkpoint:
@@ -206,6 +257,7 @@ Baigęs auditą, pirmiausia pateik:
 ### Verification
 - commands:
 - browser checks:
+- remote workflow checks:
 - expected result:
 
 ### YouTube demo
@@ -215,4 +267,4 @@ Baigęs auditą, pirmiausia pateik:
 - final reveal:
 
 ### STOP
-Po audito ir plano **nestartuok didelio build'o automatiškai**, jei yra architektūrinis neaiškumas. Pirmiausia aiškiai parodyk planą ir rizikas.
+Po audito ir plano **nestartuok didelio build'o automatiškai**, jei yra architektūrinis neaiškumas. Pirmiausia aiškiai parodyk planą, dabartines galimybes, diegimo pasirinkimą ir rizikas.
